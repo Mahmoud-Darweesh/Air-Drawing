@@ -54,6 +54,7 @@ while cap.isOpened():
   if results.multi_hand_landmarks:
     #Finds the X and Y coordinates of any point on the hand
     ###################################################################################################
+    # TODO: reduce function declaration redundancies.
     def find_all(a_str, sub):
       start = 0
       while True:
@@ -66,29 +67,35 @@ while cap.isOpened():
       for hand_landmarks in results.multi_hand_landmarks:
         s = str(hand_landmarks)
         arr = list(find_all(s, 'x'))
-      return float(s[arr[num]+3:arr[num]+10])
+        return float(s[arr[num]+3:arr[num]+10])
 
     def Y(num):
       for hand_landmarks in results.multi_hand_landmarks:
         s = str(hand_landmarks)
         arr = list(find_all(s, ' y:'))
-      return float(s[arr[num]+4:arr[num]+11])
+        return float(s[arr[num]+4:arr[num]+11])
 
     def Z(num):
       for hand_landmarks in results.multi_hand_landmarks:
         s = str(hand_landmarks)
         arr = list(find_all(s, ' z:'))
-      return float(s[arr[num]+4:arr[num]+11])
+        # TODO: Check if this is right. I assumed it was like this based on the two functions above.
+        #  So far I think it is working.
+        return float(s[arr[num]+5:arr[num]+12])
+
     ###################################################################################################
 
     #Detects weather a finger is up or down
     ###################################################################################################
-    centerPoint = X(2)
+    # TODO: Redundant detects of thumb, ring finger, pinky.
+
+    centerPoint = Y(2) # TODO: Redundant
     if Y(4)<Y(17):
       thumb = True
     else:
       thumb = False
 
+    # Detects if index finger is pointing upwards.
     centerPoint = Y(6)
     if Y(7)<centerPoint and Y(8)<centerPoint:
       indexFinger = True
@@ -116,17 +123,24 @@ while cap.isOpened():
 
     #Drawing
     ###################################################################################################
+    # TODO: better to define dimensions before creating image.
     height, width, _ = image.shape
+    #TODO: change colour
+    draw_color = (0, 0, 255) # Red
+    wait_color = (255, 0, 255) # Magenta
+    CURSOR_THICKNESS = 15
+
     if indexFinger and not middleFinger:
 
       #Draws the cursor on the screen
-      cv2.circle(image, (int(X(8) * width), int(Y(8) * height)), 15, (0, 0, 255), cv2.FILLED)
-
+      cv2.circle(image, (int(X(8) * width), int(Y(8) * height)), CURSOR_THICKNESS, draw_color, cv2.FILLED)
+      # TODO: line gets too thick suddenly making a 'blob'
+      line_thickness = round(Z(8) * 100)
       if Xstart == 0 and Ystart == 0:
-        cv2.circle(blank_image, (int(X(8) * width), int(Y(8) * height)), 5, (0, 0, 255), cv2.FILLED)
+        cv2.circle(blank_image, (int(X(8) * width), int(Y(8) * height)), int(line_thickness/2), draw_color, cv2.FILLED)
       else:
         #Draws a line from the start point to the end point
-        cv2.line(blank_image, (int(X(8) * width), int(Y(8) * height)),(Xstart,Ystart), (0, 0, 255), 5, cv2.FILLED)
+        cv2.line(blank_image, (int(X(8) * width), int(Y(8) * height)),(Xstart,Ystart), draw_color, line_thickness, cv2.FILLED)
       
       #Sets the start point to the current point
       Xstart = int(X(8) * width)
@@ -134,7 +148,7 @@ while cap.isOpened():
 
       print("Draw")
     else:
-      cv2.circle(image, (int(X(8) * width), int(Y(8) * height)), 15, (255, 0, 255), cv2.FILLED)
+      cv2.circle(image, (int(X(8) * width), int(Y(8) * height)), CURSOR_THICKNESS, wait_color, cv2.FILLED)
 
       Xstart = 0
       Ystart = 0
