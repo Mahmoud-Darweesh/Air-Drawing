@@ -82,6 +82,7 @@ while cap.isOpened():
         # TODO: Check if this is right. I assumed it was like this based on the two functions above.
         #  So far I think it is working.
         return float(s[arr[num]+5:arr[num]+12])
+
     ###################################################################################################
 
     #Detects weather a finger is up or down
