@@ -73,6 +73,12 @@ while cap.isOpened():
         s = str(hand_landmarks)
         arr = list(find_all(s, ' y:'))
       return float(s[arr[num]+4:arr[num]+11])
+
+    def Z(num):
+      for hand_landmarks in results.multi_hand_landmarks:
+        s = str(hand_landmarks)
+        arr = list(find_all(s, ' z:'))
+      return float(s[arr[num]+4:arr[num]+11])
     ###################################################################################################
 
     #Detects weather a finger is up or down
