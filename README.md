@@ -11,10 +11,10 @@
 
 1) Add a functions list including:
 
-    1) Changing color 
-    2) Changing thickness 
-    3) Saving Image on a canvas or with image
-    4) Eraser tool
+    - Changing color 
+    - Changing thickness 
+    - Saving Image on a canvas or with image
+    - Eraser tool
 
 2) Separating the hand-tracking code into a different class
 
